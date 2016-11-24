@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F6790574-598D-4F57-8EB8-B612ED2B6D32}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>mytest</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);WEBRTC_WIN;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);V8_DEPRECATION_WARNINGS;ENABLE_NOTIFICATIONS;ENABLE_PLUGINS=1;ENABLE_PDF=1;USE_AURA=1;NO_TCMALLOC;ENABLE_WEBRTC=1;ENABLE_TASK_MANAGER=1;ENABLE_THEMES=1;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;CHROMIUM_BUILD;ENABLE_MEDIA_ROUTER=1;FIELDTRIAL_TESTING_ENABLED;COMPONENT_BUILD;__STD_C;_CRT_RAND_S;_CRT_SECURE_NO_DEPRECATE;_HAS_EXCEPTIONS=0;_SCL_SECURE_NO_DEPRECATE;_ATL_NO_OPENGL;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;PSAPI_VERSION=1;WIN32;_SECURE_ATL;_USING_V110_SDK71_;WIN32_LEAN_AND_MEAN;_UNICODE;UNICODE;NTDDI_VERSION=0x0A000000;_WIN32_WINNT=0x0A00;WINVER=0x0A00;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;EXPAT_RELATIVE_PATH;_CRT_SECURE_NO_WARNINGS;NOMINMAX</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../src;../src/webrtc</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ana_config_proto.lib;ana_debug_dump_proto.lib;audio.lib;audio_coding.lib;audio_conference_mixer.lib;audio_decoder_interface.lib;audio_device.lib;audio_encoder_interface.lib;audio_format.lib;audio_format_conversion.lib;audio_frame_manipulator.lib;audio_mixer_impl.lib;audio_network_adaptor.lib;audio_processing.lib;audio_processing_sse2.lib;audioproc_debug_proto.lib;audioproc_protobuf_utils.lib;bitrate_controller.lib;boringssl.dll.lib;boringssl_asm.lib;builtin_audio_decoder_factory.lib;call.lib;cng.lib;command_line_parser.lib;common_audio.lib;common_audio_sse2.lib;common_video.lib;congestion_controller.lib;desktop_capture.lib;desktop_capture_differ_sse2.lib;dl.lib;expat.lib;field_trial_default.lib;g711.lib;g722.lib;gmock.lib;gmock_main.lib;gtest.lib;ilbc.lib;isac.lib;isac_common.lib;level_indicator.lib;libjingle_peerconnection.lib;libjpeg.lib;libsrtp.lib;libstunprober.lib;libvpx.lib;libvpx_yasm.lib;libyuv.lib;media_file.lib;metrics_default.lib;neteq.lib;options_sources.lib;opus.lib;pacing.lib;pcm16b.lib;primitives.lib;protobuf_full.lib;protobuf_lite.dll.lib;protoc_lib.lib;red.lib;remote_bitrate_estimator.lib;rent_a_codec.lib;rtc_base.lib;rtc_base_approved.lib;rtc_event_log_impl.lib;rtc_event_log_parser.lib;rtc_event_log_proto.lib;rtc_event_log_source.lib;rtc_media.lib;rtc_p2p.lib;rtc_pc.lib;rtc_stats.lib;rtc_task_queue.lib;rtc_xmllite.lib;rtc_xmpp.lib;rtp_rtcp.lib;simd.lib;simd_asm.lib;system_wrappers.lib;usrsctp.lib;utility.lib;video.lib;video_capture.lib;video_capture_internal_impl.lib;video_capture_module.lib;video_coding.lib;video_coding_utility.lib;video_processing.lib;video_processing_sse2.lib;voice_engine.lib;webrtc_common.lib;webrtc_h264.lib;webrtc_i420.lib;webrtc_opus.lib;webrtc_vp8.lib;webrtc_vp9.lib;winsdk_samples.lib;yasm_utils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./libs/</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);WEBRTC_WIN;V8_DEPRECATION_WARNINGS;ENABLE_NOTIFICATIONS;ENABLE_PLUGINS=1;ENABLE_PDF=1;USE_AURA=1;NO_TCMALLOC;ENABLE_WEBRTC=1;ENABLE_TASK_MANAGER=1;ENABLE_THEMES=1;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;CHROMIUM_BUILD;ENABLE_MEDIA_ROUTER=1;FIELDTRIAL_TESTING_ENABLED;COMPONENT_BUILD;__STD_C;_CRT_RAND_S;_CRT_SECURE_NO_DEPRECATE;_HAS_EXCEPTIONS=0;_SCL_SECURE_NO_DEPRECATE;_ATL_NO_OPENGL;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;PSAPI_VERSION=1;WIN32;_SECURE_ATL;_USING_V110_SDK71_;WIN32_LEAN_AND_MEAN;_UNICODE;UNICODE;NTDDI_VERSION=0x0A000000;_WIN32_WINNT=0x0A00;WINVER=0x0A00;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;EXPAT_RELATIVE_PATH;_CRT_SECURE_NO_WARNINGS;NOMINMAX</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../src;../src/webrtc</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ana_config_proto.lib;ana_debug_dump_proto.lib;audio.lib;audio_coding.lib;audio_conference_mixer.lib;audio_decoder_interface.lib;audio_device.lib;audio_encoder_interface.lib;audio_format.lib;audio_format_conversion.lib;audio_frame_manipulator.lib;audio_mixer_impl.lib;audio_network_adaptor.lib;audio_processing.lib;audio_processing_sse2.lib;audioproc_debug_proto.lib;audioproc_protobuf_utils.lib;bitrate_controller.lib;boringssl.dll.lib;boringssl_asm.lib;builtin_audio_decoder_factory.lib;call.lib;cng.lib;command_line_parser.lib;common_audio.lib;common_audio_sse2.lib;common_video.lib;congestion_controller.lib;desktop_capture.lib;desktop_capture_differ_sse2.lib;dl.lib;expat.lib;field_trial_default.lib;g711.lib;g722.lib;gmock.lib;gmock_main.lib;gtest.lib;ilbc.lib;isac.lib;isac_common.lib;level_indicator.lib;libjingle_peerconnection.lib;libjpeg.lib;libsrtp.lib;libstunprober.lib;libvpx.lib;libvpx_yasm.lib;libyuv.lib;media_file.lib;metrics_default.lib;neteq.lib;options_sources.lib;opus.lib;pacing.lib;pcm16b.lib;protobuf_full.lib;primitives.lib;red.lib;remote_bitrate_estimator.lib;rent_a_codec.lib;rtc_base.lib;rtc_base_approved.lib;rtc_event_log_impl.lib;rtc_event_log_parser.lib;rtc_event_log_proto.lib;rtc_event_log_source.lib;rtc_media.lib;rtc_p2p.lib;rtc_pc.lib;rtc_stats.lib;rtc_task_queue.lib;rtc_xmllite.lib;rtc_xmpp.lib;rtp_rtcp.lib;simd.lib;simd_asm.lib;system_wrappers.lib;usrsctp.lib;utility.lib;video.lib;video_capture.lib;video_capture_internal_impl.lib;video_capture_module.lib;video_coding.lib;video_coding_utility.lib;video_processing.lib;video_processing_sse2.lib;voice_engine.lib;webrtc_common.lib;webrtc_h264.lib;webrtc_i420.lib;webrtc_opus.lib;webrtc_vp8.lib;webrtc_vp9.lib;winsdk_samples.lib;yasm_utils.lib;%(AdditionalDependencies);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./libs/</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
