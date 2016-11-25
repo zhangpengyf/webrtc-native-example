@@ -25,14 +25,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../main.mm"
-            timestampString = "501680515.037712"
+            filePath = "/Users/zhangpeng/code/webrtc-checkout/src/out/Debug/../../webrtc/voice_engine/voe_base_impl.cc"
+            timestampString = "501733878.071085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "test_main()"
-            landmarkType = "9">
+            startingLineNumber = "363"
+            endingLineNumber = "363"
+            landmarkName = "VoEBaseImpl::CreateChannel(const ChannelConfig&amp; config)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
