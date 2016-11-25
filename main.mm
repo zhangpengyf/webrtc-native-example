@@ -18,9 +18,9 @@ int g_audioReceiveChannelId = -1;
 int g_videoSendChannelId = -1;
 int g_videoReceiveChannelId = -1;
 class AudioLoopbackTransport;
-class videoLoopbackTransport;
+class VideoLoopbackTransport;
 AudioLoopbackTransport* g_audioSendTransport = nullptr;
-videoLoopbackTransport* g_videoSendTransport = nullptr;
+VideoLoopbackTransport* g_videoSendTransport = nullptr;
 
 class AudioLoopbackTransport:public webrtc::Transport{
 public:
@@ -114,6 +114,10 @@ int CreateAudioReceiveStream()
 
 int CreateVideoSendStream()
 {
+    g_videoSendTransport = new VideoLoopbackTransport();
+    webrtc::VideoSendStream::Config config(g_videoSendTransport);
+    webrtc::VideoEncoderConfig encoder_config;
+    g_call->CreateVideoSendStream(std::move(config), std::move(encoder_config));
     return 0;
 }
 
