@@ -24,6 +24,7 @@
 #include "webrtc/media/engine/webrtcvoe.h"
 #include "webrtc/api/call/audio_state.h"
 #include "webrtc/modules/audio_coding/codecs/builtin_audio_decoder_factory.h"
+#include "webrtc/base/asyncpacketsocket.h"
 
 webrtc::Call* g_call = nullptr;
 cricket::VoEWrapper* g_voe  = nullptr;
@@ -32,6 +33,63 @@ webrtc::AudioReceiveStream* g_audioReceiveStream = nullptr;
 webrtc::VideoSendStream* g_videoSendStream = nullptr;
 webrtc::VideoReceiveStream* g_videoReceiveStream = nullptr;
 rtc::scoped_refptr<webrtc::AudioDecoderFactory> g_audioDecoderFactory;
+
+int g_audioSendChannelId = -1;
+int g_audioReceiveChannelId = -1;
+int g_videoSendChannelId = -1;
+int g_videoReceiveChannelId = -1;
+class AudioLoopbackTransport;
+class videoLoopbackTransport;
+AudioLoopbackTransport* g_audioSendTransport = nullptr;
+videoLoopbackTransport* g_videoSendTransport = nullptr;
+
+class AudioLoopbackTransport:public webrtc::Transport{
+public:
+    virtual bool SendRtp(const uint8_t* packet,size_t length,const webrtc::PacketOptions& options)
+    {
+        printf("send audio rtp\n");
+        rtc::PacketTime pTime = rtc::CreatePacketTime(0);
+        webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::AUDIO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
+        assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
+        return true;
+    }
+    virtual bool SendRtcp(const uint8_t* packet, size_t length)
+    {
+        printf("send audio rtcp\n");
+        rtc::PacketTime pTime = rtc::CreatePacketTime(0);
+        webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::AUDIO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
+        assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
+        return true;
+    }
+};
+
+class VideoLoopbackTransport:public webrtc::Transport{
+public:
+    virtual bool SendRtp(const uint8_t* packet,size_t length,const webrtc::PacketOptions& options)
+    {
+        printf("send video rtp\n");
+        rtc::PacketTime pTime = rtc::CreatePacketTime(0);
+        webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::VIDEO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
+        assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
+        return true;
+    }
+    virtual bool SendRtcp(const uint8_t* packet, size_t length)
+    {
+        printf("send video rtcp\n");
+        rtc::PacketTime pTime = rtc::CreatePacketTime(0);
+        webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::VIDEO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
+        assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
+        return true;
+    }
+};
+
+int CreateVoe()
+{
+    g_audioDecoderFactory = webrtc::CreateBuiltinAudioDecoderFactory();
+    g_voe = new cricket::VoEWrapper();
+    g_voe->base()->Init(NULL,NULL,g_audioDecoderFactory);
+    return 0;
+}
 
 int CreateCall()
 {
@@ -49,21 +107,13 @@ int CreateCall()
     return 0;
 }
 
-int CreateVoe()
-{
-    g_audioDecoderFactory = webrtc::CreateBuiltinAudioDecoderFactory();
-    g_voe = new cricket::VoEWrapper();
-    g_voe->base()->Init(NULL,NULL,g_audioDecoderFactory);
-    return 0;
-}
-
 int CreateAudioSendStream()
 {
-    webrtc::Transport* send_transport = NULL;
-    webrtc::AudioSendStream::Config config(send_transport);
+    g_audioSendTransport = new AudioLoopbackTransport();
+    webrtc::AudioSendStream::Config config(g_audioSendTransport);
     
-    int channelId = g_voe->base()->CreateChannel();
-    config.voe_channel_id = channelId;
+    g_audioSendChannelId = g_voe->base()->CreateChannel();
+    config.voe_channel_id = g_audioSendChannelId;
     g_audioSendStream = g_call->CreateAudioSendStream(config);
     
     assert(g_audioSendStream);
@@ -74,8 +124,8 @@ int CreateAudioReceiveStream()
 {
     webrtc::AudioReceiveStream::Config config;
     config.decoder_factory = g_audioDecoderFactory;
-    int channelId = g_voe->base()->CreateChannel();
-    config.voe_channel_id = channelId;
+    g_audioReceiveChannelId = g_voe->base()->CreateChannel();
+    config.voe_channel_id = g_audioReceiveChannelId;
     
     g_audioReceiveStream = g_call->CreateAudioReceiveStream(config);
     
@@ -95,6 +145,11 @@ int CreateVideoReceiveStream()
 
 int StartCall()
 {
+    int ret = 0;
+    g_audioSendStream->Start();
+    assert(ret == 0);
+    g_audioReceiveStream->Start();
+    assert(ret == 0);
     return 0;
 }
 
