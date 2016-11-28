@@ -1,9 +1,14 @@
 ﻿#include "Header.h"
 #include "webrtc/call.h"
+#include "webrtc/config.h"
 #include "webrtc/logging/rtc_event_log/rtc_event_log.h"
 #include "webrtc/media/engine/webrtcvoe.h"
 #include "webrtc/modules/audio_coding/codecs/builtin_audio_decoder_factory.h"
 #include "webrtc/base/asyncpacketsocket.h"
+#include "webrtc/video_encoder.h"
+#include "webrtc/video_decoder.h"
+#include "webrtc/modules/video_coding/codec_database.h"
+#include "webrtc/test/frame_generator_capturer.h"
 
 webrtc::Call* g_call = nullptr;
 cricket::VoEWrapper* g_voe  = nullptr;
@@ -22,11 +27,13 @@ class VideoLoopbackTransport;
 AudioLoopbackTransport* g_audioSendTransport = nullptr;
 VideoLoopbackTransport* g_videoSendTransport = nullptr;
 
+webrtc::VideoCodec g_videoCodec;
+
 class AudioLoopbackTransport:public webrtc::Transport{
 public:
     virtual bool SendRtp(const uint8_t* packet,size_t length,const webrtc::PacketOptions& options)
     {
-        printf("send audio rtp\n");
+        //printf("send audio rtp\n");
         rtc::PacketTime pTime = rtc::CreatePacketTime(0);
         webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::AUDIO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
         assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
@@ -59,6 +66,15 @@ public:
         webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::VIDEO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
         assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
         return true;
+    }
+};
+
+class FakeRenderer : public rtc::VideoSinkInterface<webrtc::VideoFrame> {
+public:
+    FakeRenderer() {};
+    
+    void OnFrame(const webrtc::VideoFrame& video_frame) override {
+        printf("render frame");
     }
 };
 
@@ -112,17 +128,86 @@ int CreateAudioReceiveStream()
     return 0;
 }
 
+
+class EncoderStreamFactory : public webrtc::VideoEncoderConfig::VideoStreamFactoryInterface {
+public:
+    EncoderStreamFactory(std::string codec_name,
+                         int max_qp,
+                         int max_framerate,
+                         bool is_screencast,
+                         bool conference_mode)
+    : codec_name_(codec_name),
+    max_qp_(max_qp),
+    max_framerate_(max_framerate),
+    is_screencast_(is_screencast),
+    conference_mode_(conference_mode) {}
+    
+private:
+    std::vector<webrtc::VideoStream> CreateEncoderStreams(
+                                                          int width,
+                                                          int height,
+                                                          const webrtc::VideoEncoderConfig& encoder_config) override {
+        RTC_DCHECK(encoder_config.number_of_streams > 1 ? !is_screencast_ : true);
+        
+        
+        webrtc::VideoStream stream;
+        stream.width = width;
+        stream.height = height;
+        stream.max_framerate = max_framerate_;
+        stream.min_bitrate_bps = 100 * 1000;
+        stream.target_bitrate_bps = stream.max_bitrate_bps = 500*1000;
+        stream.max_qp = max_qp_;
+        
+        
+        std::vector<webrtc::VideoStream> streams;
+        streams.push_back(stream);
+        return streams;
+    }
+    
+    const std::string codec_name_;
+    const int max_qp_;
+    const int max_framerate_;
+    const bool is_screencast_;
+    const bool conference_mode_;
+};
+
+
 int CreateVideoSendStream()
 {
     g_videoSendTransport = new VideoLoopbackTransport();
-    webrtc::VideoSendStream::Config config(g_videoSendTransport);
+
+    //VideoEncoderConfig
     webrtc::VideoEncoderConfig encoder_config;
-    g_call->CreateVideoSendStream(std::move(config), std::move(encoder_config));
+    webrtc::VCMCodecDataBase::Codec(webrtc::kVideoCodecVP8, &g_videoCodec);
+    encoder_config.encoder_specific_settings = new rtc::RefCountedObject<webrtc::VideoEncoderConfig::Vp8EncoderSpecificSettings>(g_videoCodec.codecSpecific.VP8);
+    encoder_config.encoder_specific_settings->FillEncoderSpecificSettings(&g_videoCodec);
+    encoder_config.content_type = webrtc::VideoEncoderConfig::ContentType::kRealtimeVideo;
+    encoder_config.number_of_streams = 1;
+    encoder_config.video_stream_factory = new rtc::RefCountedObject<EncoderStreamFactory>(g_videoCodec.plName, g_videoCodec.qpMax, g_videoCodec.maxFramerate, false, false);
+    
+    //Config
+    webrtc::VideoSendStream::Config config(g_videoSendTransport);
+    config.rtp.ssrcs.push_back(888);
+    config.encoder_settings.payload_name = "VP8";
+    config.encoder_settings.encoder = webrtc::VideoEncoder::Create(webrtc::VideoEncoder::EncoderType::kVp8);
+    config.encoder_settings.payload_type = g_videoCodec.plType;
+    
+    g_videoSendStream = g_call->CreateVideoSendStream(std::move(config), std::move(encoder_config));
     return 0;
 }
 
 int CreateVideoReceiveStream()
 {
+    webrtc::VideoReceiveStream::Config config(g_videoSendTransport);
+    config.renderer = new FakeRenderer();
+    config.rtp.local_ssrc = 222;
+    config.rtp.remote_ssrc = 888;
+    webrtc::VideoReceiveStream::Decoder decoder;
+    decoder.decoder = webrtc::VideoDecoder::Create(webrtc::VideoDecoder::DecoderType::kVp8);
+    decoder.payload_name = g_videoCodec.plName;
+    decoder.payload_type = g_videoCodec.plType;
+    config.decoders.push_back(decoder);
+    g_videoReceiveStream = g_call->CreateVideoReceiveStream(std::move(config));
     return 0;
 }
 
@@ -130,6 +215,14 @@ int StartCall()
 {
     g_audioSendStream->Start();
     g_audioReceiveStream->Start();
+    g_videoReceiveStream->Start();
+    
+    webrtc::test::FrameGeneratorCapturer* capture = webrtc::test::FrameGeneratorCapturer::Create(640, 480, 20, webrtc::Clock::GetRealTimeClock());
+    capture->Init();
+    g_videoSendStream->SetSource(capture);
+    capture->Start();
+    g_videoSendStream->Start();
+    
     return 0;
 }
 

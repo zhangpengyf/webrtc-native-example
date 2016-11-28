@@ -55,6 +55,12 @@
 		6E4E030D1DE706BD000FC57A /* variance_impl_avx2.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4E03051DE706BD000FC57A /* variance_impl_avx2.o */; };
 		6E4E030E1DE706BD000FC57A /* vp9_error_intrin_avx2.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4E03061DE706BD000FC57A /* vp9_error_intrin_avx2.o */; };
 		6E4E030F1DE706BD000FC57A /* vpx_subpixel_8t_intrin_avx2.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4E03071DE706BD000FC57A /* vpx_subpixel_8t_intrin_avx2.o */; };
+		6EBAD4D91DEC38CE00FA3891 /* libwebrtc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EBAD4D81DEC38CE00FA3891 /* libwebrtc.a */; };
+		6EBAD4DB1DEC390900FA3891 /* libwebrtc_common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EBAD4DA1DEC390900FA3891 /* libwebrtc_common.a */; };
+		6EBAD4DD1DEC39EF00FA3891 /* config.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD4DC1DEC39EF00FA3891 /* config.cc */; };
+		6EBAD4DF1DEC472400FA3891 /* frame_generator_capturer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD4DE1DEC472400FA3891 /* frame_generator_capturer.cc */; };
+		6EBAD4E11DEC476200FA3891 /* frame_generator.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD4E01DEC476200FA3891 /* frame_generator.cc */; };
+		6EBAD4E31DEC479200FA3891 /* frame_utils.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD4E21DEC479200FA3891 /* frame_utils.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -111,6 +117,12 @@
 		6E4E03061DE706BD000FC57A /* vp9_error_intrin_avx2.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = vp9_error_intrin_avx2.o; path = ../../src/out/Debug/obj/third_party/libvpx/libvpx_intrinsics_avx2/vp9_error_intrin_avx2.o; sourceTree = "<group>"; };
 		6E4E03071DE706BD000FC57A /* vpx_subpixel_8t_intrin_avx2.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = vpx_subpixel_8t_intrin_avx2.o; path = ../../src/out/Debug/obj/third_party/libvpx/libvpx_intrinsics_avx2/vpx_subpixel_8t_intrin_avx2.o; sourceTree = "<group>"; };
 		6E4E03101DE70702000FC57A /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
+		6EBAD4D81DEC38CE00FA3891 /* libwebrtc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebrtc.a; path = ../../src/out/Debug/obj/webrtc/libwebrtc.a; sourceTree = "<group>"; };
+		6EBAD4DA1DEC390900FA3891 /* libwebrtc_common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebrtc_common.a; path = ../../src/out/Debug/obj/webrtc/libwebrtc_common.a; sourceTree = "<group>"; };
+		6EBAD4DC1DEC39EF00FA3891 /* config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = config.cc; path = ../../../src/webrtc/config.cc; sourceTree = "<group>"; };
+		6EBAD4DE1DEC472400FA3891 /* frame_generator_capturer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frame_generator_capturer.cc; path = ../../../src/webrtc/test/frame_generator_capturer.cc; sourceTree = "<group>"; };
+		6EBAD4E01DEC476200FA3891 /* frame_generator.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frame_generator.cc; path = ../../../src/webrtc/test/frame_generator.cc; sourceTree = "<group>"; };
+		6EBAD4E21DEC479200FA3891 /* frame_utils.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frame_utils.cc; path = ../../../src/webrtc/test/frame_utils.cc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +130,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EBAD4DB1DEC390900FA3891 /* libwebrtc_common.a in Frameworks */,
+				6EBAD4D91DEC38CE00FA3891 /* libwebrtc.a in Frameworks */,
 				6E4E02E61DE705F5000FC57A /* inv_txfm_sse2.o in Frameworks */,
 				6E4E02F01DE705F5000FC57A /* vp9_idct_intrin_sse2.o in Frameworks */,
 				6E4E02F51DE7065E000FC57A /* vp8_enc_stubs_mmx.o in Frameworks */,
@@ -186,6 +200,10 @@
 		6E3F09961DE6E7560018FF1F /* webrtc-test */ = {
 			isa = PBXGroup;
 			children = (
+				6EBAD4E21DEC479200FA3891 /* frame_utils.cc */,
+				6EBAD4E01DEC476200FA3891 /* frame_generator.cc */,
+				6EBAD4DE1DEC472400FA3891 /* frame_generator_capturer.cc */,
+				6EBAD4DC1DEC39EF00FA3891 /* config.cc */,
 				6E3F09971DE6E7560018FF1F /* AppDelegate.h */,
 				6E3F09981DE6E7560018FF1F /* AppDelegate.m */,
 				6E3F099D1DE6E7560018FF1F /* ViewController.h */,
@@ -211,6 +229,8 @@
 		6E4E02BB1DE6F298000FC57A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6EBAD4DA1DEC390900FA3891 /* libwebrtc_common.a */,
+				6EBAD4D81DEC38CE00FA3891 /* libwebrtc.a */,
 				6E4E03001DE706BD000FC57A /* fwd_txfm_avx2.o */,
 				6E4E03011DE706BD000FC57A /* loopfilter_avx2.o */,
 				6E4E03021DE706BD000FC57A /* sad_avx2.o */,
@@ -330,7 +350,11 @@
 				6E3F099F1DE6E7560018FF1F /* ViewController.mm in Sources */,
 				6E3F099C1DE6E7560018FF1F /* main.m in Sources */,
 				6E3F09AC1DE6E7BE0018FF1F /* main.mm in Sources */,
+				6EBAD4E11DEC476200FA3891 /* frame_generator.cc in Sources */,
+				6EBAD4DD1DEC39EF00FA3891 /* config.cc in Sources */,
+				6EBAD4E31DEC479200FA3891 /* frame_utils.cc in Sources */,
 				6E3F09991DE6E7560018FF1F /* AppDelegate.m in Sources */,
+				6EBAD4DF1DEC472400FA3891 /* frame_generator_capturer.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
