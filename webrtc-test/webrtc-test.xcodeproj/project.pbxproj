@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E3E74FD1DED6531004780D5 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3E74FC1DED6531004780D5 /* CoreMedia.framework */; };
 		6E3F09991DE6E7560018FF1F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3F09981DE6E7560018FF1F /* AppDelegate.m */; };
 		6E3F099C1DE6E7560018FF1F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3F099B1DE6E7560018FF1F /* main.m */; };
 		6E3F099F1DE6E7560018FF1F /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E3F099E1DE6E7560018FF1F /* ViewController.mm */; };
@@ -64,6 +65,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E3E74FC1DED6531004780D5 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		6E3F09941DE6E7560018FF1F /* webrtc-test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "webrtc-test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E3F09971DE6E7560018FF1F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6E3F09981DE6E7560018FF1F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -130,6 +132,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E3E74FD1DED6531004780D5 /* CoreMedia.framework in Frameworks */,
+				6E4E02C91DE6F2A0000FC57A /* AVFoundation.framework in Frameworks */,
 				6EBAD4DB1DEC390900FA3891 /* libwebrtc_common.a in Frameworks */,
 				6EBAD4D91DEC38CE00FA3891 /* libwebrtc.a in Frameworks */,
 				6E4E02E61DE705F5000FC57A /* inv_txfm_sse2.o in Frameworks */,
@@ -138,7 +142,6 @@
 				6E4E030F1DE706BD000FC57A /* vpx_subpixel_8t_intrin_avx2.o in Frameworks */,
 				6E4E02FD1DE706A0000FC57A /* quantize_sse4.o in Frameworks */,
 				6E4E030B1DE706BD000FC57A /* sad4d_avx2.o in Frameworks */,
-				6E4E02C91DE6F2A0000FC57A /* AVFoundation.framework in Frameworks */,
 				6E4E030A1DE706BD000FC57A /* sad_avx2.o in Frameworks */,
 				6E4E02F11DE705F5000FC57A /* vp9_quantize_sse2.o in Frameworks */,
 				6E4E02CA1DE6F2A0000FC57A /* CoreFoundation.framework in Frameworks */,
@@ -229,6 +232,7 @@
 		6E4E02BB1DE6F298000FC57A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6E3E74FC1DED6531004780D5 /* CoreMedia.framework */,
 				6EBAD4DA1DEC390900FA3891 /* libwebrtc_common.a */,
 				6EBAD4D81DEC38CE00FA3891 /* libwebrtc.a */,
 				6E4E03001DE706BD000FC57A /* fwd_txfm_avx2.o */,
@@ -565,6 +569,7 @@
 					WEBRTC_POSIX,
 					WEBRTC_MAC,
 				);
+				HEADER_SEARCH_PATHS = ../../src/webrtc/sdk/objc/Framework/Headers/;
 				INFOPLIST_FILE = "webrtc-test/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../libs/;
@@ -693,6 +698,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = ../../src/out/Debug;
+				HEADER_SEARCH_PATHS = ../../src/webrtc/sdk/objc/Framework/Headers/;
 				INFOPLIST_FILE = "webrtc-test/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../libs/;

@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ViewController : NSViewController
+@property (weak) IBOutlet NSBox *_localBox;
+@property (weak) IBOutlet NSBox *_remoteBox;
 
 
 @end

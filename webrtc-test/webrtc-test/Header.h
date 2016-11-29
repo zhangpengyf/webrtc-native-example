@@ -8,7 +8,9 @@
 
 #ifndef Header_h
 #define Header_h
+#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
-int test_main();
+int test_main(NSView* localView, NSView* remoteView);
 
 #endif /* Header_h */

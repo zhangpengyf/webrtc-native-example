@@ -12,7 +12,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    test_main();
+    test_main(self._localBox.contentView, self._remoteBox.contentView);
     // Do any additional setup after loading the view.
 }
 

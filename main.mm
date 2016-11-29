@@ -9,6 +9,12 @@
 #include "webrtc/video_decoder.h"
 #include "webrtc/modules/video_coding/codec_database.h"
 #include "webrtc/test/frame_generator_capturer.h"
+#include "webrtc/modules/video_capture/video_capture_factory.h"
+#include "webrtc/modules/video_capture/video_capture.h"
+#import "webrtc/sdk/objc/Framework/Classes/avfoundationvideocapturer.h"
+#import "webrtc/sdk/objc/Framework/Headers/WebRTC/RTCNSGLVideoView.h"
+#import "webrtc/sdk/objc/Framework/Headers/WebRTC/RTCVideoFrame.h"
+#import "webrtc/sdk/objc/Framework/Classes/RTCVideoFrame+Private.h"
 
 webrtc::Call* g_call = nullptr;
 cricket::VoEWrapper* g_voe  = nullptr;
@@ -29,11 +35,13 @@ VideoLoopbackTransport* g_videoSendTransport = nullptr;
 
 webrtc::VideoCodec g_videoCodec;
 
+RTCNSGLVideoView* g_localVideoView;
+RTCNSGLVideoView* g_remoteVideoView;
+
 class AudioLoopbackTransport:public webrtc::Transport{
 public:
     virtual bool SendRtp(const uint8_t* packet,size_t length,const webrtc::PacketOptions& options)
     {
-        //printf("send audio rtp\n");
         rtc::PacketTime pTime = rtc::CreatePacketTime(0);
         webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::AUDIO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
         assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
@@ -41,7 +49,6 @@ public:
     }
     virtual bool SendRtcp(const uint8_t* packet, size_t length)
     {
-        printf("send audio rtcp\n");
         rtc::PacketTime pTime = rtc::CreatePacketTime(0);
         webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::AUDIO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
         assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
@@ -53,7 +60,6 @@ class VideoLoopbackTransport:public webrtc::Transport{
 public:
     virtual bool SendRtp(const uint8_t* packet,size_t length,const webrtc::PacketOptions& options)
     {
-        printf("send video rtp\n");
         rtc::PacketTime pTime = rtc::CreatePacketTime(0);
         webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::VIDEO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
         assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
@@ -61,7 +67,6 @@ public:
     }
     virtual bool SendRtcp(const uint8_t* packet, size_t length)
     {
-        printf("send video rtcp\n");
         rtc::PacketTime pTime = rtc::CreatePacketTime(0);
         webrtc::PacketReceiver::DeliveryStatus status = g_call->Receiver()->DeliverPacket(webrtc::MediaType::VIDEO, packet, length, webrtc::PacketTime(pTime.timestamp, pTime.not_before));
         assert(status == webrtc::PacketReceiver::DeliveryStatus::DELIVERY_OK);
@@ -74,7 +79,23 @@ public:
     FakeRenderer() {};
     
     void OnFrame(const webrtc::VideoFrame& video_frame) override {
-        printf("render frame");
+        
+        RTCVideoFrame* videoFrame = [[RTCVideoFrame alloc]
+                                     initWithVideoBuffer:video_frame.video_frame_buffer()
+                                     rotation:video_frame.rotation()
+                                     timeStampNs:video_frame.timestamp_us() *
+                                     rtc::kNumNanosecsPerMicrosec];
+        CGSize current_size = (videoFrame.rotation % 180 == 0)
+        ? CGSizeMake(videoFrame.width, videoFrame.height)
+        : CGSizeMake(videoFrame.height, videoFrame.width);
+        
+        static CGSize size_;
+        if (!CGSizeEqualToSize(size_, current_size)) {
+            size_ = current_size;
+            [g_remoteVideoView setSize:size_];
+        }
+        [g_remoteVideoView renderFrame:videoFrame];
+
     }
 };
 
@@ -211,29 +232,107 @@ int CreateVideoReceiveStream()
     return 0;
 }
 
+class BlitzCaptureAdapter
+: public rtc::VideoSinkInterface<cricket::VideoFrame>,
+public rtc::VideoSourceInterface<webrtc::VideoFrame>
+{
+public:
+    virtual void OnFrame(const cricket::VideoFrame& frame)
+    {
+        if (_sink) {
+            webrtc::VideoFrame video_frame(frame.video_frame_buffer(), frame.rotation(), frame.timestamp_us());
+            _sink->OnFrame(video_frame);
+            
+            RTCVideoFrame* videoFrame = [[RTCVideoFrame alloc]
+                                         initWithVideoBuffer:frame.video_frame_buffer()
+                                         rotation:frame.rotation()
+                                         timeStampNs:frame.timestamp_us() *
+                                         rtc::kNumNanosecsPerMicrosec];
+            CGSize current_size = (videoFrame.rotation % 180 == 0)
+            ? CGSizeMake(videoFrame.width, videoFrame.height)
+            : CGSizeMake(videoFrame.height, videoFrame.width);
+            
+            static CGSize size_;
+            if (!CGSizeEqualToSize(size_, current_size)) {
+                size_ = current_size;
+                [g_localVideoView setSize:size_];
+            }
+            [g_localVideoView renderFrame:videoFrame];
+        }
+    }
+    
+    virtual void AddOrUpdateSink(VideoSinkInterface<webrtc::VideoFrame>* sink, const rtc::VideoSinkWants& wants)
+    {
+        _sink = sink;
+    }
+    virtual void RemoveSink(VideoSinkInterface<webrtc::VideoFrame>* sink)
+    {
+        _sink = nullptr;
+    }
+    
+private:
+    VideoSinkInterface<webrtc::VideoFrame>* _sink;
+};
+
 int StartCall()
 {
     g_audioSendStream->Start();
     g_audioReceiveStream->Start();
     g_videoReceiveStream->Start();
     
-    webrtc::test::FrameGeneratorCapturer* capture = webrtc::test::FrameGeneratorCapturer::Create(640, 480, 20, webrtc::Clock::GetRealTimeClock());
-    capture->Init();
-    g_videoSendStream->SetSource(capture);
-    capture->Start();
+    webrtc::AVFoundationVideoCapturer* capturer = new webrtc::AVFoundationVideoCapturer();
+    BlitzCaptureAdapter* adapter = new BlitzCaptureAdapter();
+    
+    capturer->AddOrUpdateSink(adapter, rtc::VideoSinkWants());
+    g_videoSendStream->SetSource(adapter);
+    cricket::VideoFormat format(640,480,1000*1000*1000/10,cricket::FOURCC_NV12);
+    capturer->Start(format);
     g_videoSendStream->Start();
+    return 0;
+}
+
+int CreateVideoRender(NSView* localView, NSView* remoteView)
+{
+    NSOpenGLPixelFormatAttribute attributes[] = {
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFADepthSize, 24,
+        NSOpenGLPFAOpenGLProfile,
+        NSOpenGLProfileVersion3_2Core,
+        0
+    };
+    
+    NSOpenGLPixelFormat* pixelFormat =[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+    
+    g_localVideoView = [[RTCNSGLVideoView alloc] initWithFrame:localView.bounds pixelFormat:pixelFormat];
+    [g_localVideoView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [localView addSubview:g_localVideoView];
+    g_localVideoView.layer.backgroundColor = CGColorCreateGenericRGB(0, 0, 0, 0.1);
+
+    g_remoteVideoView = [[RTCNSGLVideoView alloc] initWithFrame:remoteView.bounds pixelFormat:pixelFormat];
+    [g_remoteVideoView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [remoteView addSubview:g_remoteVideoView];
+    g_remoteVideoView.layer.backgroundColor = CGColorCreateGenericRGB(0, 0, 0, 0.1);
     
     return 0;
 }
 
-int test_main()
+int test_main(NSView* localView, NSView* remoteView)
 {
     CreateVoe();
     CreateCall();
     CreateAudioSendStream();
     CreateAudioReceiveStream();
+    CreateVideoRender(localView, remoteView);
     CreateVideoSendStream();
     CreateVideoReceiveStream();
     StartCall();
     return 0;
+}
+
+void stop_test()
+{
+    g_audioSendStream->Stop();
+    g_audioReceiveStream->Stop();
+    g_videoSendStream->Stop();
+    g_videoReceiveStream->Stop();
 }
