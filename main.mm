@@ -232,7 +232,7 @@ int CreateVideoReceiveStream()
     return 0;
 }
 
-class BlitzCaptureAdapter
+class CaptureAdapter
 : public rtc::VideoSinkInterface<cricket::VideoFrame>,
 public rtc::VideoSourceInterface<webrtc::VideoFrame>
 {
@@ -257,7 +257,8 @@ public:
                 size_ = current_size;
                 [g_localVideoView setSize:size_];
             }
-            [g_localVideoView renderFrame:videoFrame];
+            //同时绘制远端和本地，两个绘制线程会卡住，没查出原因
+            //[g_localVideoView renderFrame:videoFrame];
         }
     }
     
@@ -281,7 +282,7 @@ int StartCall()
     g_videoReceiveStream->Start();
     
     webrtc::AVFoundationVideoCapturer* capturer = new webrtc::AVFoundationVideoCapturer();
-    BlitzCaptureAdapter* adapter = new BlitzCaptureAdapter();
+    CaptureAdapter* adapter = new CaptureAdapter();
     
     capturer->AddOrUpdateSink(adapter, rtc::VideoSinkWants());
     g_videoSendStream->SetSource(adapter);
