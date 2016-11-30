@@ -1,7 +1,9 @@
-1.把这个项目放到webrtc-checkout目录下，和src并列
+1.下载webrtc mac版代码 branch-heads/56
 
-2.编译完成webrtc
+2.把这个项目放到webrtc-checkout目录下，和src并列
 
-3.运行本项目中的copylib.sh
+3.编译完成webrtc
 
-4.打开项目就可以使用了
+4.运行本项目中的copylib.sh
+
+5.打开项目就可以使用了
