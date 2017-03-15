@@ -315,6 +315,7 @@ class AudioFrame {
   // short period of time until webrtc clients have updated. See
   // webrtc:6548 for details.
   RTC_DEPRECATED void Mute();
+  inline AudioFrame& Append(const AudioFrame& rhs);
   RTC_DEPRECATED AudioFrame& operator>>=(const int rhs);
   RTC_DEPRECATED AudioFrame& operator+=(const AudioFrame& rhs);
 
@@ -415,7 +416,30 @@ inline AudioFrame& AudioFrame::operator>>=(const int rhs) {
   return *this;
 }
 
-inline AudioFrame& AudioFrame::operator+=(const AudioFrame& rhs) {
+inline AudioFrame& AudioFrame::Append(const AudioFrame& rhs) {
+        // Sanity check
+        assert((num_channels_ > 0) && (num_channels_ < 3));
+        if ((num_channels_ > 2) || (num_channels_ < 1)) return *this;
+        if (num_channels_ != rhs.num_channels_) return *this;
+        if ((vad_activity_ == kVadActive) || rhs.vad_activity_ == kVadActive) {
+            vad_activity_ = kVadActive;
+        }
+        else if (vad_activity_ == kVadUnknown || rhs.vad_activity_ == kVadUnknown) {
+            vad_activity_ = kVadUnknown;
+        }
+        if (speech_type_ != rhs.speech_type_) {
+            speech_type_ = kUndefined;
+        }
+        int offset = samples_per_channel_ * num_channels_;
+        for (unsigned int i = 0; i < rhs.samples_per_channel_ * rhs.num_channels_; i++) {
+            data_[offset + i] = rhs.data_[i];
+        }
+        samples_per_channel_ += rhs.samples_per_channel_;
+        return *this;
+    }
+    
+    inline AudioFrame&
+    AudioFrame::operator+=(const AudioFrame& rhs) {
   // Sanity check
   assert((num_channels_ > 0) && (num_channels_ < 3));
   if ((num_channels_ > 2) || (num_channels_ < 1)) return *this;

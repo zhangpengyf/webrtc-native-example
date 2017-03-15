@@ -1,4 +1,6 @@
 ﻿#include "Header.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "webrtc/call.h"
 #include "webrtc/config.h"
 #include "webrtc/logging/rtc_event_log/rtc_event_log.h"
@@ -8,6 +10,7 @@
 #include "webrtc/test/frame_generator_capturer.h"
 #include "webrtc/logging/rtc_event_log/rtc_event_log.h"
 #include "webrtc/modules/audio_mixer/audio_mixer_impl.h"
+#include "webrtc/voice_engine/include/voe_external_media.h"
 
 webrtc::Call* g_call = nullptr;
 cricket::VoEWrapper* g_voe  = nullptr;
@@ -19,6 +22,28 @@ int g_audioSendChannelId = -1;
 int g_audioReceiveChannelId = -1;
 class AudioLoopbackTransport;
 AudioLoopbackTransport* g_audioSendTransport = nullptr;
+
+class AudioMixDataCallBack :public webrtc::VoEMediaProcess
+{
+public:
+    virtual void Process(int channel,
+                         webrtc::ProcessingTypes type,
+                         int16_t audio10ms[],
+                         size_t length,
+                         int samplingFreq,
+                         bool isStereo)
+    {
+        if (type == webrtc::kPlaybackAllChannelsMixed)
+        {
+            printf("get remote mix pcm data\n");
+        }
+        if (type == webrtc::kRecordingAllChannelsMixed)
+        {
+            printf("get local record pcm data\n");
+            //本地声音是连续的，如果做录音mp3应该以本地回调为时间参考，在本地回调时录音
+        }
+    }
+};
 
 class AudioLoopbackTransport:public webrtc::Transport{
 public:
@@ -98,6 +123,16 @@ int StartCall()
     return 0;
 }
 
+int StartGetMixData()
+{
+    AudioMixDataCallBack* p = new AudioMixDataCallBack();
+    webrtc::VoEExternalMedia* externalMedia = webrtc::VoEExternalMedia::GetInterface(g_voe->engine());
+    //回调本地录制数据
+    externalMedia->RegisterExternalMediaProcessing(-1, webrtc::kRecordingAllChannelsMixed, *p);
+    //回调所有远端的合成数据
+    externalMedia->RegisterExternalMediaProcessing(-1, webrtc::kPlaybackAllChannelsMixed, *p);
+    return 0;
+}
 
 int test_main(NSView* localView, NSView* remoteView)
 {
@@ -106,6 +141,7 @@ int test_main(NSView* localView, NSView* remoteView)
     CreateAudioSendStream();
     CreateAudioReceiveStream();
     StartCall();
+    StartGetMixData();
     return 0;
 }
 

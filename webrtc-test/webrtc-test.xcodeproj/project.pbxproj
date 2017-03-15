@@ -22,7 +22,6 @@
 		6E4E02C91DE6F2A0000FC57A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4E02C61DE6F2A0000FC57A /* AVFoundation.framework */; };
 		6E4E02CA1DE6F2A0000FC57A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4E02C71DE6F2A0000FC57A /* CoreFoundation.framework */; };
 		6E4E02CB1DE6F2A0000FC57A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4E02C81DE6F2A0000FC57A /* Foundation.framework */; };
-		6EBAD4DD1DEC39EF00FA3891 /* config.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD4DC1DEC39EF00FA3891 /* config.cc */; };
 		6ED3682D1E78355700649083 /* abs_quant_loop.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED3672B1E78355400649083 /* abs_quant_loop.o */; };
 		6ED3682E1E78355700649083 /* abs_quant.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED3672C1E78355400649083 /* abs_quant.o */; };
 		6ED3682F1E78355700649083 /* analog_agc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED3672D1E78355400649083 /* analog_agc.o */; };
@@ -282,6 +281,7 @@
 		6ED3692D1E78355800649083 /* window32_w32.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED3682B1E78355700649083 /* window32_w32.o */; };
 		6ED3692E1E78355800649083 /* xcorr_coef.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED3682C1E78355700649083 /* xcorr_coef.o */; };
 		6ED369321E7836E600649083 /* pa_ringbuffer.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED369311E7836E600649083 /* pa_ringbuffer.o */; };
+		6ED3693A1E78ED6A00649083 /* config.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6ED369381E78ED6A00649083 /* config.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -305,7 +305,6 @@
 		6E4E02C71DE6F2A0000FC57A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		6E4E02C81DE6F2A0000FC57A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6E4E03101DE70702000FC57A /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
-		6EBAD4DC1DEC39EF00FA3891 /* config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = config.cc; path = ../../../src/webrtc/config.cc; sourceTree = "<group>"; };
 		6ED3672B1E78355400649083 /* abs_quant_loop.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = abs_quant_loop.o; path = ../libs/webrtc/abs_quant_loop.o; sourceTree = "<group>"; };
 		6ED3672C1E78355400649083 /* abs_quant.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = abs_quant.o; path = ../libs/webrtc/abs_quant.o; sourceTree = "<group>"; };
 		6ED3672D1E78355400649083 /* analog_agc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = analog_agc.o; path = ../libs/webrtc/analog_agc.o; sourceTree = "<group>"; };
@@ -565,6 +564,8 @@
 		6ED3682B1E78355700649083 /* window32_w32.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = window32_w32.o; path = ../libs/webrtc/window32_w32.o; sourceTree = "<group>"; };
 		6ED3682C1E78355700649083 /* xcorr_coef.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = xcorr_coef.o; path = ../libs/webrtc/xcorr_coef.o; sourceTree = "<group>"; };
 		6ED369311E7836E600649083 /* pa_ringbuffer.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = pa_ringbuffer.o; path = ../libs/webrtc/pa_ringbuffer.o; sourceTree = "<group>"; };
+		6ED369381E78ED6A00649083 /* config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = config.cc; sourceTree = "<group>"; };
+		6ED369391E78ED6A00649083 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -866,7 +867,8 @@
 		6E3F09961DE6E7560018FF1F /* webrtc-test */ = {
 			isa = PBXGroup;
 			children = (
-				6EBAD4DC1DEC39EF00FA3891 /* config.cc */,
+				6ED369381E78ED6A00649083 /* config.cc */,
+				6ED369391E78ED6A00649083 /* config.h */,
 				6E3F09971DE6E7560018FF1F /* AppDelegate.h */,
 				6E3F09981DE6E7560018FF1F /* AppDelegate.m */,
 				6E3F099D1DE6E7560018FF1F /* ViewController.h */,
@@ -1237,7 +1239,7 @@
 				6E3F099F1DE6E7560018FF1F /* ViewController.mm in Sources */,
 				6E3F099C1DE6E7560018FF1F /* main.m in Sources */,
 				6E3F09AC1DE6E7BE0018FF1F /* main.mm in Sources */,
-				6EBAD4DD1DEC39EF00FA3891 /* config.cc in Sources */,
+				6ED3693A1E78ED6A00649083 /* config.cc in Sources */,
 				6E3F09991DE6E7560018FF1F /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1457,16 +1459,6 @@
 					../libs/webrtc/,
 				);
 				OTHER_LDFLAGS = (
-					"-lavcodec",
-					"-lavfilter",
-					"-lavformat",
-					"-lavresample",
-					"-lavutil",
-					"-lmp3lame",
-					"-lpostproc",
-					"-lavdevice",
-					"-lswresample",
-					"-lswscale",
 					"-lexpat",
 					"-ljpeg",
 					"-lsimd",
@@ -1568,7 +1560,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.51talk.webrtc-test";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = ../../src/;
+				USER_HEADER_SEARCH_PATHS = ../;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -1584,16 +1576,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../libs/Release/;
 				OTHER_LDFLAGS = (
-					"-lavcodec",
-					"-lavfilter",
-					"-lavformat",
-					"-lavresample",
-					"-lavutil",
-					"-lmp3lame",
-					"-lpostproc",
-					"-lavdevice",
-					"-lswresample",
-					"-lswscale",
 					"-lexpat",
 					"-ljpeg",
 					"-lsimd",
@@ -1695,7 +1677,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.51talk.webrtc-test";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = ../../src/;
+				USER_HEADER_SEARCH_PATHS = ../;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;

@@ -35,8 +35,8 @@ AudioState::AudioState(const AudioState::Config& config)
   RTC_DCHECK(device);
 
   // This is needed for the Chrome implementation of RegisterAudioCallback.
-  device->RegisterAudioCallback(nullptr);
-  device->RegisterAudioCallback(&audio_transport_proxy_);
+//  device->RegisterAudioCallback(nullptr);
+//  device->RegisterAudioCallback(&audio_transport_proxy_);
 }
 
 AudioState::~AudioState() {
